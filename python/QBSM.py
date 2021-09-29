@@ -1,5 +1,3 @@
-"""Functions that compute QBSM."""
-
 import numpy as np
 
 

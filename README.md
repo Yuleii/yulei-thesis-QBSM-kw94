@@ -1,19 +1,16 @@
-![Continuous Integration](https://github.com/bhmueller/thesis/workflows/Continuous%20Integration/badge.svg)
+# Quantile-based Sensitivity Analysis on Structrual behavioral models
 
-# Reproduction repo Master thesis in Economics
+This repository hosts the Master's Thesis and its replication files written by
 
-I conduct an inquiry on the predictive validity of Morris indices for sensitivity analysis.
+> Yulei Li
+> Matriculation number 3209294
+> Master of Science in Economics
+> University of Bonn
+> Supervisor: Prof. Dr. Philipp Eisenhauer
 
 ## Overview: this repo
 
 * comp_se.py contains a comparison of the simulated and the built-in standard errors of econsa's shapley module.
 * the reproduction of my thesis results can be done by executing the notebook xy.ipynb.
 
-## References
-
-[1] Plischke, Rabitti and Borgonovo 2020
-
-[2] Song, Nelson and Staum 2016
-
-[3] Ge and Menendez 2017
 

@@ -55,13 +55,11 @@ def create_sample(
 
 def load_mean_and_cov():
     # load model specifications
-    base_params = pd.read_pickle("./data/respy-se-collection/params_kw_94_one_se.pkl")
+    base_params = pd.read_pickle("./data/params_kw_94_one_se.pkl")
 
     # mean and cov for sampling
     mean = base_params["value"].to_numpy()[:27]
-    cov = pd.read_pickle(
-        "./data/respy-se-collection/covariance_kw_94_one.pkl"
-    ).to_numpy()
+    cov = pd.read_pickle("./data/covariance_kw_94_one.pkl").to_numpy()
 
     return mean, cov
 
@@ -171,7 +169,7 @@ def params_to_respy(input_params, *args):
 
     # baseline options and params for the indices.
     _, base_options = rp.get_example_model("kw_94_one", with_data=False)
-    base_params = pd.read_pickle("./data/respy-se-collection/params_kw_94_one_se.pkl")
+    base_params = pd.read_pickle("./data/params_kw_94_one_se.pkl")
 
     params_idx = pd.Series(data=input_params, index=base_params.index[0:27])
 

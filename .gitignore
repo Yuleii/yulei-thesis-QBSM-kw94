@@ -24,7 +24,7 @@ thesis_project_heid.egg-info
 # Folder
 __pycache__
 .pytest_cache/
-env/
+temp_*
 
 # Jupyter
 .ipynb_checkpoints
