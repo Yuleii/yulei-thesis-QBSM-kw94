@@ -1,0 +1,46 @@
+name: QGSM-kw94
+
+channels:
+- defaults
+- conda-forge
+- opensourceeconomics
+
+dependencies:
+- black==19.10b0
+- chaospy
+- estimagic
+- flake8
+- ipython
+- ipykernel
+- jupyterlab
+- jupyter
+- jupyter_contrib_nbextensions
+- jupyter_nbextensions_configurator
+- matplotlib
+- nbsphinx
+- nb_black
+- numpy
+- pandas>= 1.1.1
+- pip
+- pre-commit
+- pytest
+- pytest-black
+- pytest-flake8
+- pytest-repeat
+- respy
+- restructuredtext_lint
+- scipy
+- scikit-learn
+- seaborn
+- temfpy
+- numdifftools
+- chaospy
+- mpi4py
+- SALib
+- pip:
+    - black-nb
+    - flake8-nb
+    - sphinx_rtd_theme
+    - sphinxcontrib-bibtex
+
+

@@ -1,0 +1,30 @@
+# Latex
+*.pdf
+*.run.xml
+*.bcf
+*.log
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.bib.sav
+*.bib.bak
+*.fdb_latexmk
+*.fls
+*.ipynb_checkpoints
+*.vscode
+#test_*
+thesis_project_heid.egg-info
+
+# Folder
+__pycache__
+.pytest_cache/
+env/
+
+# Jupyter
+.ipynb_checkpoints
