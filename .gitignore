@@ -25,6 +25,7 @@ thesis_project_heid.egg-info
 __pycache__
 .pytest_cache/
 temp_*
+.respy
 
 # Jupyter
 .ipynb_checkpoints

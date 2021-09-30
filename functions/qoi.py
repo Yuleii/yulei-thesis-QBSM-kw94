@@ -24,21 +24,21 @@ def unconditional_quantile_y(x, alpha_grid, func):
     return quantile_y_x
 
 
-def conditional_quantile_y(input_x_mix_respy, func, alpha_grid):
+def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
 
     n_params = 3
-    m = int(len(input_x_mix_respy) / 30)
-    n_draws = int(len(input_x_mix_respy) / (m * n_params))
+    len_input = len(input_x_mix_respy)
+    m = int(len_input / (n_params * n_samples))
 
     #     y_x_mix = np.zeros((m, n_params, n_draws, 1))
-    y_x_mix_asc = np.zeros((m, n_params, n_draws, 1))
+    y_x_mix_asc = np.zeros((m, n_params, n_samples, 1))
     quantile_y_x_mix = np.zeros((m, n_params, len(alpha_grid), 1))
 
     y_x_mix = np.array(
         Parallel(n_jobs=8)(
             delayed(quantitiy_of_interest)(x) for x in input_x_mix_respy for y in x
         )
-    ).reshape(m, n_params, n_draws, 1)
+    ).reshape(m, n_params, n_samples, 1)
 
     # Equation 21b/26. Get quantiles within each bin.
     for i in range(n_params):
@@ -47,7 +47,7 @@ def conditional_quantile_y(input_x_mix_respy, func, alpha_grid):
             y_x_mix_asc[j, i] = np.sort(y_x_mix[j, i], axis=0)
             for pp, a in enumerate(alpha_grid):
                 quantile_y_x_mix[j, i, pp] = y_x_mix_asc[j, i][
-                    (np.floor(a * n_draws)).astype(int)
+                    (np.floor(a * n_samples)).astype(int)
                 ]  # quantiles corresponding to alpha
     return quantile_y_x_mix
 

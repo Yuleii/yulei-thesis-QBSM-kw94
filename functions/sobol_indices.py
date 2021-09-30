@@ -1,11 +1,11 @@
-from python.sampling import (
+from functions.sampling import (
     load_mean_and_cov,
     unconditional_samples,
     substract_params,
     fix_true_params,
     params_to_respy,
 )
-from python.qoi import quantitiy_of_interest
+from functions.qoi import quantitiy_of_interest
 
 from SALib.analyze import hdmr
 import numpy as np
