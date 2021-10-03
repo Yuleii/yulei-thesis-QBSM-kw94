@@ -1,0 +1,84 @@
+\section{The Structural Behavioral Model} \label{sec:2}
+\thispagestyle{plain} % surpress header on first page
+
+
+The SA approach is applied to the DCDP model of the human capital investment decisions presented in \cite{keane1994SolutionEstimationDiscrete} which is briefly described in subsection \ref{sec:2.1}. The uncertain input parameters of the model are described in subsection \ref{sec:2.2} and the quantity of interest is discussed in subsection \ref{sec:2.3}.
+
+\subsection{\cite{keane1994SolutionEstimationDiscrete} model} \label{sec:2.1}
+
+Structural models have been developed to understand individual behavior and inform policy design in labor economics, particularly for DCDP models. DCDP models, as a framework for policy evaluation, have been applied to study a range of sequential individual decisions. A notable example is a work by \cite{keane1994SolutionEstimationDiscrete}, who developed an approximate solution to a large-scale DCDP model of human capital occupational choice. This is an ideal demonstration of how a structural model can evaluate various policies and determine the optimal policy without running many treatments.\\
+
+\noindent
+We assume that individuals are forward looking agents who make their occupational choice based on the principle of expected utility maximization. From age 15 to the age 55, the total period of decision is $T=40$ years. As shown in Figure \ref{fig:1}, in each period $t$, individual makes choice among $K=4$ alternatives: occupation one($a_t=1$), occupation two($a_t=2$), schooling($a_t=3$) and staying at home($a_t=4$). We denote the agent's immediate rewards of choosing each alternative in a given period as:
+
+
+\begin{equation}
+r_{t}\left(s_{t}, a_{t}\right)=\left\{\begin{array}{ll}
+w_{1 t}=\exp \left\{\alpha_{10}+\alpha_{11} g_{t}+\alpha_{12} e_{1 t}+\alpha_{13} e_{1 t}^{2}+\alpha_{14} e_{2 t}+\alpha_{15} e_{2 t}^{2}+\epsilon_{1 t}\right\} & \text { if } a_{t}=1 \\
+w_{2 t}=\exp \left\{\alpha_{20}+\alpha_{21} g_{t}+\alpha_{22} e_{1 t}+\alpha_{23} e_{1 t}^{2}+\alpha_{24} e_{2 t}+\alpha_{25} e_{2 t}^{2}+\epsilon_{2 t}\right\} & \text { if } a_{t}=2 \\
+\beta_{0}-\beta_{1} \mathbb{I}\left[g_{t} \geq 12\right]-\beta_{2} \mathbb{I}\left[a_{t-1} \neq 3\right]+\epsilon_{3 t} & \text { if } a_{t}=3 \\
+\gamma_{0}+\epsilon_{4 t} & \text { if } a_{t}=4
+\end{array}\right.
+\end{equation}
+$w_{1t}$ and $w_{2t}$ is occupational-specific wage if individual choose either occupation one or two. $\alpha_1$ and $\alpha_1$ are parameters of corresponding wage functions. The primary factors that associated to wages are: years of completed schooling($g_t$), years of working experience in two occupations respectively($e_{1t}$, $e_{2t}$).If the individual does not choose to work($a_t=3$ or $a_4 = 4$), although they are not paid during this period, they still receive rewards from their choices. The variables that influence the choice of schooling are: the consumption value of schooling($\beta_0$), the tuition of post-secondary education($\beta_1$), and the adjustment expenses involved with returning to school. The means return of staying at home that affects the home option is represented by $\gamma_0$. \\
+
+\noindent
+The state space $t$ can be represented by
+\begin{equation} \label{eq:2}
+\left\{g_{t}, e_{1 t}, e_{2 t}, a_{t-1}, \epsilon_{1 t}, \epsilon_{2 t}, \epsilon_{3 t}, \epsilon_{4 t}\right\}
+\end{equation}
+
+
+
+\noindent
+The part of state space observable to both individuals and researchers are $\left\{g_{t}, e_{1 t}, e_{2 t}, a_{t-1}\right\}$. The evolution of those variables follows a Markov chain, which means that the next state at period $t+1$ relies on the current state $t$ and the decision maker's action:
+
+
+\begin{equation}\label{eq:3}
+\begin{aligned}
+e_{1, t+1} &=e_{1 t}+\mathbb{I}\left[a_{t}=1\right] \\
+e_{2, t+1} &=e_{2 t}+\mathbb{I}\left[a_{t}=2\right] \\
+g_{t+1} &=g_{t}+\mathbb{I}\left[a_{t}=3 \right]
+\end{aligned}
+\end{equation}
+The shocks$\{\epsilon_{1t}, \epsilon_{2t},, \epsilon_{3t}, \epsilon_{4t}\}$ are serially independent and observed by individuals but not researchers.They are assumed to be jointly normally distributed. \\
+
+\noindent
+The maximized value of the expected remaining lifetime utility at $t$ is defined as:
+
+\begin{equation}\label{eq:4}
+V(S(t), t)=\max _{\left\{d_{k}(t)\right\}_{k \in K}} E\left[\sum_{\tau=t}^{T} \delta^{\tau-t} \sum_{k=1}^{K} R_{k}(\tau) d_{k}(\tau) \mid S(t)\right]
+\end{equation}
+with $0< \beta < 1$ the discount factor. $S(t)$ are state variables that contain information available before decision in period $t$ is made. $R_k$ is the rewards from choose alternative $k$ at period $t$. $d_k$ is individual's decision from among K=4 discrete alternatives. \\
+
+\noindent
+Alternatively, this optimization problem can be expressed as a the Bellman equation, which is a necessary condition for optimality associated with dynamic programming\citep{bellman1966DynamicProgramming, eisenhauer2019ApproximateSolutionFinite}:
+
+\begin{equation}
+E \max (S(t+1))=E\left[V(S(t+1), t+1) \mid S(t), d_{k}(t)=1\right]
+\end{equation}
+
+
+
+\subsection{Model parameters} \label{sec:2.2}
+
+
+
+For model parametrization, our work takes advantage of the open-source Python package respy\citep{janosgabler2020RespyFrameworkSimulation}, which has greatly simplified the process of simulation and estimation of finite-horizon DCDP models. Table \ref{tab:1} shows the parameter values obtained from the simulation based on Data Set One in \cite{keane1994SolutionEstimationDiscrete}. According to this setting, occupation two requires greater expertise and thus is more beneficial from education. Experience in occupation one also increases the likelihood of increased earnings in another occupation. Thus, a general skill that is useful for both occupations can be obtained through either schooling or work experience, while occupation-specific skills are exclusively obtained through work. In this sense, we will refer to occupation two as white-collar and occupation one as blue-collar henceforth. \\
+
+\noindent
+Once parameterization is completed, we are allowed to analyze the economic implications behind it. Firstly, we investigate the correlation between selective model parameters \ref{fig:3}. In general, a large share correlation are prevalent, which emphasizes the importance of using GSA rather than LSA for this model. Because GSA takes into account the interaction between parameters. It is also worth noting that $\hat{\delta}$ and $\hat{\beta_0}$ and beta show a relatively strong negative correlation. \\
+
+
+\noindent
+\subsection{Quantity of Interest(QoI)} \label{sec:2.3}
+
+
+This paper measures the impact of a 500 USD tuition subsidy on the average number of years a individual spends on pursuing a higher education degree. Figure \ref{fig:2} shows the probability distribution of this quantity of interest. Our simulation results with respy\citep{janosgabler2020RespyFrameworkSimulation} showed a 1.55-year increase in average school years, which is slightly higher than the effect documented by \cite{keane1994SolutionEstimationDiscrete}, that is an increase of 1.44 years. More specifically, Figure \ref{fig:3} shows a comparison of the occupation shares over their relevant life cycle for a sample of 1000 individuals in different sectors. The left panel shows a baseline scenario that without any policy intervention, whereas the right panel shows a counterfactual scenario that all the 500 USD tuition subsidy is implemented. The yellow, green, dark blue and light blue bars represent the percentages of people stay-at-home, pursuing education, blue-collar, white-collar, respectively. With this setting, we are able to access the policy effect without running experiments at real world. \\
+
+\noindent
+We noticed the change that, due to the fact that the white-collar industry values education, many agents begin their schooling early and continue to work in the white-collar sector. The positive impact and accumulated blue-collar experience pays off in the white-collar sector as well, leading to this shift from white- to blue-collar. It is nearly on impact due to the overall low level of participation in the household sector. The difference between the education shares for each age group in the right and left graphs, as represented by the red line, is quantified investment. This is because the vertical axis can be thought of as the percentage of time a typical agent spends in the education sector over the course of a year. When we look at both graphs, we can clearly see that tuition subsidies encourage younger people to stay in school longer and older people to pursue white collar works.\\
+
+
+\noindent
+In section \ref{sec:3} and section for \ref{sec:4} I will present how uncertain in model input translate to the variations of model output, in this case, the average change of school years. However, due to the computational burden in the sampling procedure, I restrict my attention to three main parameters: return to an additional year of schooling$\alpha_{11}$, reward for going to college$\beta_1$ and reward of non-market alternatives$\gamma_0$. As what we study is the impact of subsidy, the profit/cost trade-offs involved with the decision whether to pursue continuing education are fully reflected by the return on educational investment. Although $\gamma_0$ seems not explicitly related to our QoI like the previous chosen ones, we include is as a comparison.

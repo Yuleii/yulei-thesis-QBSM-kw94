@@ -3,6 +3,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+import os
 
 
 def heatmeap_corr():
@@ -96,5 +97,8 @@ def heatmeap_corr():
     yax = ax.get_yaxis()
     pad = max(tick.label.get_window_extent().width for tick in yax.majorTicks) + 5
     yax.set_tick_params(pad=pad)
+
+    abs_dir = os.path.dirname(__file__)
+    plt.savefig(os.path.join(abs_dir, "../../figures/heatmap.png"), bbox_inches="tight")
 
     return fig, ax

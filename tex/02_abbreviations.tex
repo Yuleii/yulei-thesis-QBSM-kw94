@@ -1,0 +1,32 @@
+% no section command to prevent "A" before "Appendix" in toc.
+
+\addcontentsline{toc}{section}{Abbreviations}
+
+\section*{Abbreviations} % no number before Appendix in toc
+\thispagestyle{plain} % surpress header on first page
+
+\phantom{This text will be invisible}
+\hspace{20cm}
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}%
+	\begin{tabular}{@{}ll@{}}
+		\toprule
+	Term\phantom{space}	& Meaning \\ \midrule
+	$\bold{CDF}$	& Cumulative distribution function \\
+	$\bold{DCDP}$	& Discrete choice dynamic programming  \\
+	$\bold{EKW}$	& Eckstein-Keane-Wolpin  \\
+	$\bold{GSA}$	& Global sensitivity analysis \\
+	$\bold{LSA}$	& Local sensitivity analysis \\
+	$\bold{PDF}$	& Probability distribution function \\
+	$\bold{QBSM}$	& Quantile-based sensitivity measures \\
+    $\bold{QoI}$	& Quantity of interest \\
+    $\bold{USD}$	& US-Dollar  \\
+ \bottomrule
+	\end{tabular}
+\end{table}

@@ -1,0 +1,126 @@
+\section{Sensitivity Analysis for the Structural Behavioral Model} \label{sec:3}
+\thispagestyle{plain} % surpress header on first page
+
+
+In this chapter, we introduce the basic concepts, terminologies, methods of GSA in Section \ref{sec:3.1}, including the general model structure and the input factors. Then we demonstrate the mathematical descriptions of the variance-based and quantile-based sensitivity measures in Section \ref{sec:3.2} and Section \ref{sec:3.3}.
+
+\subsection{Global sensitivity analysis: the framework} \label{sec:3.1}
+
+The sensitivity analysis is “The study of how the uncertainty in the output of a model (numerical or otherwise) can be apportioned to different sources of uncertainty in the model input”\citep{saltelli2004SensitivityAnalysisPractice}. Thus, the definition of sensitivity analysis includes models, model inputs and model outputs. Throughout this work, a structural economic model will be regarded as a general function that defines a relationship between inputs and output(s):
+
+\begin{equation} \label{eq:6}
+\mathcal{M}: \theta \mapsto y=\mathcal{M}(\theta)
+\end{equation}
+
+
+\noindent
+where $\boldsymbol{\theta} \in \Theta \subset \mathbb{R}^{d}$ is a vector of model parameters. The output of interest is a vector $y$. To produce a counterfactual prediction, a policy $g \in \mathcal{G}$ changes the mapping to $\mathcal{M}_g(\theta)$\citep{eisenhauer2021StructuralModelsPolicymaking}. Consequently, the differences between the prediction before and after the policy intervention yield a structural estimate of policy effects. \\
+
+\noindent
+Unlike LSA which analyzes how a tiny change near an input space value affects the scalar output, GSA identifies such effects in the whole input space. To be more precise, each input parameter is treated as a random variable assigned with a distribution of all possible values. Consequently, the uncertainty coming from model parameters is transmitted through the model to generate an empirical distribution of the output of interest $Y = M(\Theta)$ with a joint probability density function $f_Y(y)$. So far, this is how uncertainty propagation occurs. \\
+
+\noindent
+Once uncertainty propagation characterizes the uncertainty of the model output, a sensitivity analysis then can be applied to identify which parameters are primarily responsible for the variability of output. \\
+
+\noindent
+To date, a wide range of GSA methods has been developed. In this paper, we focus on variance-based sensitivity measures\citep{sobol1993SensitivityEstimatesNonlinear} and quantile-based sensitivity measures\citep{kucherenko2019QuantileBasedGlobal}. A comprehensive discussion and comparison of the GSA methods can be found in \cite{razavi2021FutureSensitivityAnalysis}.
+
+\subsection{Variance-based sensitivity measures}  \label{sec:3.2}
+
+The model function $Y=f\left(\theta_{1}, \ldots, \theta_{d}\right)$ is defined in $d$-dimensional real coordinate space $R^d$ with an input vector $\boldsymbol{\theta}=(\theta_1, \dots, \theta_{d})$.Note that $\mathbf{\theta}$ is a random variable with a continuous probability distribution function(PDF). To quantify the effect of variations of $\theta$ on the variation of $Y$, let us consider the conditional expectation  $\mathrm{E}\left[Y \mid \Theta_{i}=\theta_{i}\right]$. It is the mean value of output $Y$ over the probability distribution of  $\Theta_k(k \neq i)$ with the condition that $\Theta_i$ is fixed to $\theta_i$. If we consider the variations of $\Theta_i$,  the associated random variable is  $\mathrm{E}\left[Y \mid \Theta_{i}\right]$, whose variance quantifies the effect of $\Theta_i$ on the variation of Y. \\
+
+\noindent
+According to the result by \cite{sobol1993SensitivityEstimatesNonlinear}, given $k$ input variables mutually independent, the variance of the output can be decompose as the sum of variances of increasing order:
+
+\begin{equation} \label{eq:7}
+\operatorname{Var}(Y)=\sum_{i} V_{i}+\sum_{i j} V_{i j}+\sum_{i j h} V_{i j k}+\cdots+V_{1,2}, k
+\end{equation}
+
+\noindent
+where $V_i = \operatorname{Var}(E(Y \mid \Theta_i))$ is first order variance and $V_{ij} = \operatorname{Var}(E(Y \mid \Theta_i,\Theta_j))$ is second order variance, etc. Note that in an additive model, this decomposition includes only first order variances. \\
+
+\noindent
+Thus, \textit{first-order indice}s of input parameter $\Theta_i$ is defined as:
+
+\begin{equation} \label{eq:8}
+S_i = \frac{V_i}{\operatorname{Var}(Y)}=\frac{\operatorname{Var}(E(Y \mid \Theta_i))}{\operatorname{Var}(Y)}
+\end{equation}
+
+\noindent
+Accordingly, \textit{second-order indices} of input parameter $\Theta_i$ and $\Theta_j$ is defined as:
+
+
+\begin{equation} \label{eq:9}
+S_{ij} = \frac{V_{ij}}{\operatorname{Var}(Y)}=\frac{\operatorname{Var}(E(Y \mid \Theta_i,\Theta_j))}{\operatorname{Var}(Y)}
+\end{equation}
+
+\noindent
+First-order indices measures the proportion of the total variance which is due to the main effect of $\Theta_i$ on Y. Whereas, second-order index measures the proportion of the total variance which is explained by the interaction between the two inputs. \\
+
+\noindent
+In 1996, \cite{homma1996ImportanceMeasuresGlobal} introduced the \textit{total variance index} which measures the proportion of the total variance due to the
+main effect of $\Theta$, and all its interactions with the other inputs:
+
+\begin{equation} \label{eq:10}
+S_{Ti}=\frac{\sum_{i} V_{i}+\sum_{j h} V_{i j h}+\cdots}{\operatorname{Var}(Y)} = \frac{E(Var(Y \mid \Theta_{\sim i}))}{Var(Y)}=1-\frac{Var(E(Y \mid \Theta _{\sim i})}{Var(Y)}
+\end{equation}
+
+\noindent
+where $\Theta_{\sim i}=(\Theta_1, \Theta_2, \dots, \Theta_{i-1}, \Theta_{i+1}, \dots ,  \Theta_k)$ \\
+
+\noindent
+There are three features of total variance index to be aware of. Firstly, The condition $S_{Ti}=0$ is necessary and sufficient for $\Theta_i$ to be a non-influential input(it can be treated as a fixed input). Secondly, if $S_{Ti} \approx S_i$ the interaction between $\Theta_i$ and the other inputs does not affect the variability of the output. Lastly, it is obvious that the sum of the total indexes is in general greater than \cite{homma1996ImportanceMeasuresGlobal}.
+
+
+\subsection{Quantile-based sensitivity measures}  \label{sec:3.3}
+
+Now we consider the scenarios where only a specific range of output is important to analyst. For instance, $Y = M(\boldsymbol(\Theta) \leq a )$ or $Y = M(\boldsymbol(\Theta) \geq b$. We reformulate such problems to $\alpha$-th quantile of the output CDF $q_Y(\alpha)$:
+
+
+\begin{equation} \label{eq:11}
+\alpha=\int_{-\infty}^{q_{Y}(\alpha)} \rho_{Y}(y) d y=P\left\{Y \leq q_{Y}(\alpha)\right\}
+\end{equation}
+
+\noindent
+alternatively, to be more formal:
+
+\begin{equation} \label{eq:12}
+q_{Y}(\alpha)=F_{Y}^{-1}(\alpha)=\inf \{y \mid F(Y \leq y) \geq \alpha\}
+\end{equation}
+
+\noindent
+where $\rho_Y(y)$ denotes the PDF of the output $Y$ and $F_Y(y)$ denotes to the CDF of the output $Y$.To solve such problems, \cite{kucherenko2019QuantileBasedGlobal} introduced QBSM $\bar{q}_{i}^{(1)}$ and $\bar{q}_{i}^{(2)}$
+
+\begin{equation} \label{eq:13}
+\bar{q}_{i}^{(1)}(\alpha)=E_{\theta_{i}}\left(\left|q_{Y}(\alpha)-q_{Y \mid \Theta_{i}}(\alpha)\right|\right)=\int\left|q_{Y}(\alpha)-q_{Y \mid \Theta_{i}}(\alpha)\right| d F_{\theta_{i}}
+\end{equation}
+
+\begin{equation} \label{eq:14}
+\bar{q}_{i}^{(2)}(\alpha)=E_{\theta_{i}}\left[\left(q_{Y}(\alpha)-q_{Y \mid \Theta_{i}}(\alpha)\right)^{2}\right]=\int\left(q_{Y}(\alpha)-q_{Y \mid \Theta_{i}}(\alpha)\right)^{2} d F_{\theta_{i}}
+\end{equation}
+
+\noindent
+Here,  $F_{\Theta_i}$ denotes to the CDF of input variable, $q_{Y \mid \Theta_{i}}({\alpha})$ denotes to the conditional PDF with $\Theta_{i}$ being fixed at $X_{i}=x_{i}^{\mbox{*}}$ \citep{song2021QuantileSensitivityMeasures}
+
+\begin{equation}\label{eq:15}
+q_{Y \mid \Theta_{i}}(\alpha)=F_{Y \mid \Theta_{i}}^{-1}(\alpha)=\inf \left\{P\left(Y \leq y \mid \Theta_{i}=\theta_{i}^{*}\right) \geq \alpha\right\}
+\end{equation}
+
+
+\noindent
+Additionally, a normalized version of QBSM $Q_{i}^{(1)}(\alpha)$ and $Q_{i}^{(2)}(\alpha)$ was also presented in \cite{kucherenko2019QuantileBasedGlobal}:
+
+\begin{equation}\label{eq:16}
+Q_{i}^{(1)}(\alpha)=\frac{\bar{q}_{i}^{(1)}(\alpha)}{\sum_{j=1}^{d} \bar{q}_{j}^{(1)}(\alpha)}
+\end{equation}
+
+\begin{equation}\label{eq:17}
+Q_{i}^{(2)}(\alpha)=\frac{\bar{q}_{i}^{(2)}(\alpha)}{\sum_{j=2}^{d} \bar{q}_{j}^{(2)}(\alpha)}
+\end{equation}
+
+\noindent
+with $\left\{Q_{i}^{(1)}(\alpha), Q_{i}^{(2)}(\alpha)\right\} \in[0,1]$.
+
+
+
+

@@ -1,4 +1,22 @@
 import numpy as np
+from sampling import create_sample
+from qoi import unconditional_quantile_y, conditional_quantile_y
+
+
+def compute_norm_QBSM(n_samples, seed, M, sampling_method, MC_method, alpha_grid, func):
+    input_x_respy, input_x_mix_respy = create_sample(
+        n_samples,
+        seed,
+        M,
+        sampling_method,
+        MC_method,
+    )
+    quantile_y_x = unconditional_quantile_y(input_x_respy, alpha_grid, func)
+    quantile_y_x_mix = conditional_quantile_y(30, input_x_mix_respy, func, alpha_grid)
+    q_1, q_2 = quantile_measures(quantile_y_x, quantile_y_x_mix)
+    norm_q_1, norm_q_2 = normalized_quantile_measures(q_1, q_2)
+
+    return norm_q_1, norm_q_2
 
 
 def quantile_measures(quantile_y_x, quantile_y_x_mix):

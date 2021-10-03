@@ -1,16 +1,14 @@
 # Quantile-based Sensitivity Analysis on Structrual behavioral models
 
-This repository hosts the Master's Thesis and its replication files written by
+This repository hosts my Master's Thesis and its replication files.
 
-> Yulei Li
-> Matriculation number 3209294
-> Master of Science in Economics
-> University of Bonn
-> Supervisor: Prof. Dr. Philipp Eisenhauer
 
-## Overview: this repo
 
-* comp_se.py contains a comparison of the simulated and the built-in standard errors of econsa's shapley module.
-* the reproduction of my thesis results can be done by executing the notebook xy.ipynb.
+## Overview:
 
+* folder `functions` contains functions to compute qauntile-based sensitivity measures on [Keane and Wolpin(1994)](https://www.jstor.org/stable/2109768?origin=crossref) model
+* the reproduction of my thesis results can be done by executing the notebook `thesis-replication.ipynb`
+
+
+## References:
 

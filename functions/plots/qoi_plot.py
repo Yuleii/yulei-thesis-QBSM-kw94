@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import respy as rp
 import matplotlib.pyplot as plt
+import os
 
 
 def qoi_kde(n_bs_samples, bs_sample_size, subsidy):
@@ -22,9 +23,8 @@ def qoi_kde(n_bs_samples, bs_sample_size, subsidy):
     ax.set_ylabel("Density", fontsize=12)
     ax.legend(loc="upper right", framealpha=1, frameon=True)
 
-    plt.savefig(
-        "/Users/yulei/Desktop/yulei-thesis-QGSM-kw94/qoi.png", bbox_inches="tight"
-    )
+    abs_dir = os.path.dirname(__file__)
+    plt.savefig(os.path.join(abs_dir, "../../figures/qoi.png"), bbox_inches="tight")
 
     return fig, ax
 

@@ -1,0 +1,59 @@
+\section{Monte Carlo Simulation} \label{sec:4}
+\thispagestyle{plain} % surpress header on first page
+
+Because QBSM has no closed-form expression, they must be assessed numerically through Monte Carlo(MC) simulation\citep{fishman1996MonteCarloConcepts}. MC simulation generates random samples from a probability distribution, and the problem becomes deterministic for each sample. Solving these deterministic problems allows us to obtain statistical information regarding the exact solutions, such as the mean or variance. However, MC approaches are renowned for their slow convergence, with an average coverage rate of $\sqrt N$(N stands for the sample size). This means that, to get more precise outcomes, a large number of samples are required.
+Although various improved MC methods have been developed, such as Latin sampling methods\citep{loh1996LatinHypercubeSampling} and Quasi-Monte Carlo(QMC) methods\citep{niederreiter1992RandomNumberGeneration}, there are still certain limits to it. \\
+
+\noindent
+In \cite{kucherenko2017DifferentNumericalEstimators}, the performance of several numerical schemes based on sampling strategies was compared. It is documented that the double loop reordering(DLR) technique outperforms all other methods, especially when combined with QMC sampling. In this paper, by integrating the two MC estimators provided by \cite{kucherenko2019QuantileBasedGlobal} and the procedure improved by \cite{song2021QuantileSensitivityMeasures}, we list the following steps to estimate QBSM in our study:
+
+\begin{itemize}
+\item \textbf{Step 1:} To obtain  $q_{Y \mid \Theta_{i}}$:
+
+\begin{enumerate}[label=(\arabic*),ref=\arabic*]
+  \item Generate $N$ points  $\boldsymbol{\Theta}^{(k)}=\left\{\Theta_{1}^{(k)}, \Theta_{2}^{(k)}, \cdots, \Theta_{d}^{(k)}\right\}, k=1,2, \cdots, N$ according to the joint PDF $ \rho (\boldsymbol{\Theta)}$.
+
+
+  \item Compute the unconditional values of output $Y^{(k)}=g\left(\boldsymbol{\Theta}^{(k)}\right), k=1, 2, \dots, N$, then reorder them in ascending order $\left\{Y^{(1-s t)}, Y^{(2-\mathrm{nd})}, \cdots, Y^{(N-\mathrm{th})}\right\}^{\mathrm{T}}$.
+
+  \item \label{itm:2} Decide the $\alpha$-th output value as unconditional quantile $q_Y(\alpha)$: $q_{Y}^{(N)}(\alpha)=Y^{(\alpha N-\text { th })}$.
+
+
+\end{enumerate}
+
+
+
+\item \textbf{Step 2:} To obtain  $q_{Y \mid \Theta_{i}}(\alpha)$:
+
+
+\begin{enumerate}[label=(\arabic*),ref=\arabic*]
+  \item Generate $M$ points  $\left\{\theta_{i}^{(1)}, \theta_{i}^{(2)}, \cdots, x_{i}^{(M)}\right\}^{\mathrm{T}}$ according to the joint PDF $\rho (\Theta)$, which should be independent from $\boldsymbol{\Theta}^{(k)}$
+
+  \item Fix $\Theta_i$ st $\Theta_i = \theta_i^{(k)}, k= 1, \dots, M$, and get N conditional points
+
+
+  $$
+    \Theta^{(k)}=\left\{\Theta_{1}^{k}, \cdots, \Theta_{i-1}^{k}, x_{i}^{(k)}, \Theta_{i+1}^{k}, \cdots, X_{d}^{k}\right\}, k=1,2, \cdots, N
+  $$
+
+
+
+  \item Compute conditional values of $Y_{x_{i}^{(k)}}^{(k)}=g\left(\boldsymbol{X}^{(k)} \mid X_{i}=x_{i}^{(k)}\right)$, and reorder them in ascending order $\left\{Y_{x_{i}^{(k)}}^{(1-\mathrm{st})}, Y_{x_{i}^{(k)}}^{(2-\mathrm{nd})}, \cdots, Y_{x_{i}^{(k)}}^{(N-\mathrm{th})}\right\}$
+
+
+  \item \label{itm:2}  Decide the $\alpha$-th output value as conditional quantile: $q_{Y \mid x_{i}^{(k)}}(\alpha)=Y_{x_{i}^{(k)}}^{(\alpha N-\mathrm{th})}$
+
+
+\end{enumerate}
+
+\item \textbf{Step 3}: To calculate QBSM accroding to \eqref{eq:13} and \eqref{eq:14}
+
+\item \textbf{Step 4}: To calculate normalized QBSM accroding to \eqref{eq:16} and \eqref{eq:17}
+
+\end{itemize}
+
+\noindent
+To perform DLR method, $M$ typically be set between 50 to 100\citep{kucherenko2017DifferentNumericalEstimators}. To perform brutal force simulation,
+simply set M = N. The number function evaluation for a fixed $i$ is equal to $N=(dM + 1)$. In general, MC simulation performs efficiently for the calculation of QBSM. However, when deal with extreme quantiles, for instance, $\alpha \le 0.05$, the performane can be disappointing.
+
+

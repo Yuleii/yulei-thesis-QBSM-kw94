@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import respy as rp
 import numpy as np
+import os
 
 
 def choiceovertime():
@@ -61,4 +62,10 @@ def choiceovertime():
         bbox_to_anchor=(0.5, -0.01),
         ncol=4,
     )
+
+    abs_dir = os.path.dirname(__file__)
+    plt.savefig(
+        os.path.join(abs_dir, "../../figures/choiceovertime.png"), bbox_inches="tight"
+    )
+
     return fig, ax
