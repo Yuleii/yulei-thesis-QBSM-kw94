@@ -35,7 +35,7 @@ def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
     quantile_y_x_mix = np.zeros((m, n_params, len(alpha_grid), 1))
 
     y_x_mix = np.array(
-        Parallel(n_jobs=8)(
+        Parallel(n_jobs=-1)(
             delayed(quantitiy_of_interest)(x) for x in input_x_mix_respy for y in x
         )
     ).reshape(m, n_params, n_samples, 1)
@@ -66,7 +66,6 @@ def quantitiy_of_interest(params_idx_respy, *args):
         policy_params.loc[("nonpec_edu", "at_least_twelve_exp_edu"), "value"] += 500
         policy_df = simulate(policy_params)
         policy_edu = policy_df.groupby("Identifier")["Experience_Edu"].max().mean()
-
     change_mean_edu = policy_edu - base_edu
 
     print("I'm process", getpid(), ":", change_mean_edu)

@@ -18,6 +18,7 @@
 *.fls
 *.ipynb_checkpoints
 *.vscode
+.DS_Store
 #test_*
 thesis_project_heid.egg-info
 
