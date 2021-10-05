@@ -19,16 +19,14 @@ def sobol_indices(
     len_alp=31,
     sampling_method="random",
 ):
-    """Compute sobol indices for Keane and Wolpin (1994) model
+    """Compute sobol indices for Keane and Wolpin (1994) model.
+
     n_samples : int
         Number of samples to draw.
-
     seed : int
         Seed for the random number generators.
-
     len_alp :int
         The lenth of alpha grid.
-
     sampling_method : string
         Specifies which sampling method should be employed. Possible arguments
         are in {"random", "grid", "chebyshev", "korobov","sobol", "halton",
@@ -38,6 +36,7 @@ def sobol_indices(
     -------
     S_total_array : np.ndarray
         Sobol indices of interested parameters which are broadcast to quantile points.
+
     """
 
     x_3, input_x_respy = _sobol_inputs(n_samples, seed, sampling_method=sampling_method)

@@ -10,31 +10,10 @@ from qoi import conditional_quantile_y, unconditional_quantile_y, quantitiy_of_i
 from sampling import create_sample
 
 
-def QBSM_plot(
-    func,
-    n_samples,
-    seed,
-    M,
-    sampling_method,
-    MC_method,
-):
+def QBSM_plot(measure_1, measure_2):
     # # range of alpha
     dalp = (0.98 - 0.02) / 30
     alpha_grid = np.arange(0.02, 0.98 + dalp, dalp)  # len(alpha_grid) = 31
-
-    input_x_respy, input_x_mix_respy = create_sample(
-        n_samples,
-        seed,
-        M,
-        sampling_method,
-        MC_method,
-    )
-
-    quantile_y_x = unconditional_quantile_y(input_x_respy, alpha_grid, func)
-    quantile_y_x_mix = conditional_quantile_y(M, input_x_mix_respy, func, alpha_grid)
-
-    q_1, q_2 = quantile_measures(quantile_y_x, quantile_y_x_mix)
-    measure_1, measure_2 = normalized_quantile_measures(q_1, q_2)
 
     fig, ax = plt.subplots(figsize=(9, 7))
 
@@ -71,8 +50,38 @@ def QBSM_plot(
     return fig, ax
 
 
+def compute_QBSM(
+    func,
+    n_samples,
+    seed,
+    M,
+    sampling_method,
+    MC_method,
+):
+    # # range of alpha
+    dalp = (0.98 - 0.02) / 30
+    alpha_grid = np.arange(0.02, 0.98 + dalp, dalp)  # len(alpha_grid) = 31
+
+    input_x_respy, input_x_mix_respy = create_sample(
+        n_samples,
+        seed,
+        M,
+        sampling_method,
+        MC_method,
+    )
+
+    quantile_y_x = unconditional_quantile_y(input_x_respy, alpha_grid, func)
+    quantile_y_x_mix = conditional_quantile_y(M, input_x_mix_respy, func, alpha_grid)
+
+    q_1, q_2 = quantile_measures(quantile_y_x, quantile_y_x_mix)
+    norm_q_1, norm_q_2 = normalized_quantile_measures(q_1, q_2)
+
+    return norm_q_1, norm_q_2
+
+
 if __name__ == "__main__":
-    QBSM_plot(
+
+    measure_1, measure_2 = compute_QBSM(
         func=quantitiy_of_interest,
         n_samples=30,
         seed=123,
@@ -80,3 +89,5 @@ if __name__ == "__main__":
         sampling_method="random",
         MC_method="Brute force",
     )
+
+    QBSM_plot(measure_1, measure_2)

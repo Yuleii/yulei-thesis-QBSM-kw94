@@ -3,11 +3,15 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+from pathlib import Path
 import os
 import sys
 
+
 sys.path.append("..")
-from sampling import DATA_PATH
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA_PATH = PROJECT_ROOT / "data"
 
 
 def heatmeap_corr():

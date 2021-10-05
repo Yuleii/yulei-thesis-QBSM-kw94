@@ -44,14 +44,13 @@ def unconditional_quantile_y(x, alpha_grid, func):
 def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
 
     """Return quantiles of outputs with conditional input.
+
     Parameters
     ----------
     x_mix : np.ndarray
         Mixed draws. Shape has the form (m, n_params, n_draws, n_params).
-
     func : callable
         Objective function to calculate the quantile-based measures. Must be broadcastable.
-
     alpha_grid : np.ndarray
         A sequence of evenly spaced values on the interval (0, 1).
 
@@ -60,6 +59,7 @@ def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
     quantile_y_x_mix  :  np.ndarray
         Quantiles of output corresponding to alpha with conditional inputs. Shape has the form
         (m, n_params, len(alpha_grid), 1), where m is the number of conditional bins.
+
     """
 
     n_params = 3
@@ -88,6 +88,7 @@ def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
 
 def quantitiy_of_interest(params_idx_respy):
     """Simulate model and evaluate quantity of interest.
+
     Parameters
     ----------
     input_params : ndarray
@@ -97,6 +98,7 @@ def quantitiy_of_interest(params_idx_respy):
     -------
     change_mean_edu : float
         Quantity of Interest. Mean changes in education years of population.
+
     """
 
     _, base_options = rp.get_example_model("kw_94_one", with_data=False)
@@ -122,8 +124,7 @@ def quantitiy_of_interest(params_idx_respy):
 def _temporary_working_directory():
     """Changes working directory and returns to previous on exit.
     The name of the temporary directory is 'temp_process-id_timestamp'
-    The directory is deleted upon exit.
-    """
+    The directory is deleted upon exit."""
     folder_name = f"temp_{os.getpid()}_{str(time()).replace('.', '')}"
     path = Path(".").resolve() / folder_name
     path.mkdir()

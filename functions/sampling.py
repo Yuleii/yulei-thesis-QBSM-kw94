@@ -34,18 +34,14 @@ def create_sample(
     ----------
     n_samples : int
         Number of samples to draw.
-
     seed : int
         Seed for the random number generators.
-
     M : int
         The number of conditional bins to genetate if `MC_method` is "DLR".
-
     sampling_method : string
         Specifies which sampling method should be employed. Possible arguments
         are in {"random", "grid", "chebyshev", "korobov","sobol", "halton",
         "hammersley", "latin_hypercube"}
-
     MC_method : string
         Specify the Monte Carlo estimator. One of ["brute force", "DLR"],
         where "DLR" denotes to the double loop reordering approach.
@@ -55,7 +51,6 @@ def create_sample(
     input_x_respy: list
         A list of input parameters that are ready to be passed into the
         `respy` function.
-
     input_x_mix_respy: list
         A list of conditional input parameters that are ready to be passed
         into the `respy` function.
@@ -110,6 +105,7 @@ def unconditional_samples(
     sampling_method,
 ):
     """Generate two independent groups of sample points.
+
     Parameters
     ----------
     mean : pd.DataFrame or np.ndarray
@@ -130,6 +126,7 @@ def unconditional_samples(
     sample_x, sample_x_prime : np.ndarray
         Two arrays of shape (n_draws, n_params) with i.i.d draws from a
         given joint distribution.
+
     """
     distribution = cp.MvNormal(loc=mean, scale=cov)
 
@@ -149,6 +146,7 @@ def unconditional_samples(
 
 def subset_params(x):
     """Pick a subset of samples from the sampled parameters.
+
     Parameters
     ----------
     x : np.ndarray
@@ -158,6 +156,7 @@ def subset_params(x):
     -------
     params_interests : np.ndarray
         Array of shape (n_draws, 3) contains only 3 seleted parameters.
+
     """
 
     n_draws = x.shape[0]
@@ -173,6 +172,7 @@ def subset_params(x):
 
 def conditional_samples(x_3, x_prime_3, MC_method, M):
     """Generate mixed sample sets of interest distributed accroding to a conditional PDF.
+
     Parameters
     ----------
     x_3 : np.ndarray
@@ -184,10 +184,12 @@ def conditional_samples(x_3, x_prime_3, MC_method, M):
         where "DLR" denotes to the double loop reordering approach.
     M : int
         The number of conditional bins to genetate if `MC_method` is "DLR".
+
     Returns
     -------
     x_mix :  np.ndarray
         Mixed sample sets. Shape has the form (n_draws, 3, n_draws, 3).
+
     """
 
     n_draws, n_params = x_3.shape
@@ -215,17 +217,20 @@ def conditional_samples(x_3, x_prime_3, MC_method, M):
 
 
 def fix_true_params(x_3, true_values):
-    """Replace the 3 selected point estimates with the sampled parameters
+    """Replace the 3 selected point estimates with the sampled parameters.
+
     Parameters
     ----------
     x_3 : np.ndarray
         Array with shape (n_draws, 3).
     true_values : np.ndarray
         The point estimated, of shape (k, ).
+
     Returns
     -------
     true_params_fix :  np.ndarray
         Shape has the form (n_draws, n_params, n_draws, n_params).
+
     """
 
     n_draws = x_3.shape[0]
@@ -239,17 +244,20 @@ def fix_true_params(x_3, true_values):
 
 
 def fix_true_params_mix(x_3, true_values, MC_method):
-    """Replace the 3 selected point estimates with the conditional sampled parameters
+    """Replace the 3 selected point estimates with the conditional sampled parameters.
+
     Parameters
     ----------
     x_3 : np.ndarray
         Array with shape (n_draws, 3).
     true_values : np.ndarray
         The point estimated, of shape (k, ).
+
     Returns
     -------
     true_params_fix :  np.ndarray
         Shape has the form (n_draws, n_params, n_draws, n_params).
+
     """
 
     if MC_method == "Brute force":
