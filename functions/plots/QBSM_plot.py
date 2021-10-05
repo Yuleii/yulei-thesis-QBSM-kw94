@@ -10,7 +10,7 @@ from qoi import conditional_quantile_y, unconditional_quantile_y, quantitiy_of_i
 from sampling import create_sample
 
 
-def QBSM_plot(measure_1, measure_2):
+def create_QBSM_plot(measure_1, measure_2, save=False):
     # # range of alpha
     dalp = (0.98 - 0.02) / 30
     alpha_grid = np.arange(0.02, 0.98 + dalp, dalp)  # len(alpha_grid) = 31
@@ -44,8 +44,14 @@ def QBSM_plot(measure_1, measure_2):
     labels, handles = zip(*sorted(zip(labels, handles), key=lambda t: t[0]))
     fig.legend(handles, labels, fontsize=13, loc="center right")
 
-    abs_dir = os.path.dirname(__file__)
-    plt.savefig(os.path.join(abs_dir, "../../figures/QBSM.png"), bbox_inches="tight")
+    if save is True:
+        # Define the script path relative to the jupyter notebook that calls the script.
+        abs_dir = os.path.dirname(__file__)
+        plt.savefig(
+            os.path.join(abs_dir, "../../figures/QBSM.png"), bbox_inches="tight"
+        )
+    else:
+        pass
 
     return fig, ax
 
@@ -90,4 +96,4 @@ if __name__ == "__main__":
         MC_method="Brute force",
     )
 
-    QBSM_plot(measure_1, measure_2)
+    create_QBSM_plot(measure_1, measure_2, save=True)

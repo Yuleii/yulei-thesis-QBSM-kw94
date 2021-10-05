@@ -81,6 +81,6 @@ def _sobol_inputs(n_samples, seed, sampling_method):
 def _unconditional_y(x, func):
     """Compute qoi for sobol indices"""
     # Equation 21a
-    y_x = Parallel(n_jobs=8)(delayed(func)(i) for i in x)
+    y_x = Parallel(n_jobs=-1)(delayed(func)(i) for i in x)
 
     return y_x
