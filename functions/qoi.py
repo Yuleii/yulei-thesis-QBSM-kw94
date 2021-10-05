@@ -12,7 +12,24 @@ from os import getpid
 
 
 def unconditional_quantile_y(x, alpha_grid, func):
+    """Return quantiles of outputs with unconditional input.
+    Parameters
+    ----------
+    x : np.ndarray
+        Draws from a joint distribution. Shape has the form (n_draws, n_params).
 
+    alpha_grid : np.ndarray
+        A sequence of evenly spaced values on the interval (0, 1).
+
+    func : callable
+        Objective function to calculate the quantile-based measures. Must be broadcastable.
+
+    Returns
+    -------
+    quantile_y_x :  np.ndarray
+        Quantiles of outputs corresponding to alpha with unconditional inputs.
+        Shape has the form (len(alpha_grid),).
+    """
     n_draws = len(x)
 
     # Equation 21a
@@ -26,6 +43,25 @@ def unconditional_quantile_y(x, alpha_grid, func):
 
 def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
 
+    """Return quantiles of outputs with conditional input.
+    Parameters
+    ----------
+    x_mix : np.ndarray
+        Mixed draws. Shape has the form (m, n_params, n_draws, n_params).
+
+    func : callable
+        Objective function to calculate the quantile-based measures. Must be broadcastable.
+
+    alpha_grid : np.ndarray
+        A sequence of evenly spaced values on the interval (0, 1).
+
+    Returns
+    -------
+    quantile_y_x_mix  :  np.ndarray
+        Quantiles of output corresponding to alpha with conditional inputs. Shape has the form
+        (m, n_params, len(alpha_grid), 1), where m is the number of conditional bins.
+    """
+
     n_params = 3
     len_input = len(input_x_mix_respy)
     m = int(len_input / (n_params * n_samples))
@@ -35,9 +71,7 @@ def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
     quantile_y_x_mix = np.zeros((m, n_params, len(alpha_grid), 1))
 
     y_x_mix = np.array(
-        Parallel(n_jobs=-1)(
-            delayed(quantitiy_of_interest)(x) for x in input_x_mix_respy for y in x
-        )
+        Parallel(n_jobs=-1)(delayed(func)(x) for x in input_x_mix_respy for y in x)
     ).reshape(m, n_params, n_samples, 1)
 
     # Equation 21b/26. Get quantiles within each bin.
@@ -52,7 +86,18 @@ def conditional_quantile_y(n_samples, input_x_mix_respy, func, alpha_grid):
     return quantile_y_x_mix
 
 
-def quantitiy_of_interest(params_idx_respy, *args):
+def quantitiy_of_interest(params_idx_respy):
+    """Simulate model and evaluate quantity of interest.
+    Parameters
+    ----------
+    input_params : ndarray
+        Unindexed input parameters.
+
+    Returns
+    -------
+    change_mean_edu : float
+        Quantity of Interest. Mean changes in education years of population.
+    """
 
     _, base_options = rp.get_example_model("kw_94_one", with_data=False)
 
@@ -78,8 +123,6 @@ def _temporary_working_directory():
     """Changes working directory and returns to previous on exit.
     The name of the temporary directory is 'temp_process-id_timestamp'
     The directory is deleted upon exit.
-
-
     """
     folder_name = f"temp_{os.getpid()}_{str(time()).replace('.', '')}"
     path = Path(".").resolve() / folder_name

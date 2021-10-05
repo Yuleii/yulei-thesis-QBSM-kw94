@@ -1,4 +1,4 @@
-"""Functions that create samples for QBSM."""
+"""Functions that create samples."""
 import chaospy as cp
 import numpy as np
 import respy as rp
@@ -22,12 +22,45 @@ CHAOSPY_SAMPLING_METHODS = {
 
 
 def create_sample(
-    n_samples,
-    seed,
-    M,
+    n_samples=30,
+    seed=123,
+    M="None",
     sampling_method="random",
     MC_method="Brute force",
 ):
+    """Simulate samples of qoi.
+
+    Parameters
+    ----------
+    n_samples : int
+        Number of samples to draw.
+
+    seed : int
+        Seed for the random number generators.
+
+    M : int
+        The number of conditional bins to genetate if `MC_method` is "DLR".
+
+    sampling_method : string
+        Specifies which sampling method should be employed. Possible arguments
+        are in {"random", "grid", "chebyshev", "korobov","sobol", "halton",
+        "hammersley", "latin_hypercube"}
+
+    MC_method : string
+        Specify the Monte Carlo estimator. One of ["brute force", "DLR"],
+        where "DLR" denotes to the double loop reordering approach.
+
+    Returns
+    -------
+    input_x_respy: list
+        A list of input parameters that are ready to be passed into the
+        `respy` function.
+
+    input_x_mix_respy: list
+        A list of conditional input parameters that are ready to be passed
+        into the `respy` function.
+    """
+
     # load mean and cov
     mean, cov = load_mean_and_cov()
 
@@ -41,8 +74,8 @@ def create_sample(
     )
 
     # fix parameters of interest
-    x_3 = substract_params(sample_x)
-    x_prime_3 = substract_params(sample_x_prime)
+    x_3 = subset_params(sample_x)
+    x_prime_3 = subset_params(sample_x_prime)
     x = fix_true_params(x_3, mean)
 
     # get conditional samples
@@ -58,6 +91,7 @@ def create_sample(
 
 
 def load_mean_and_cov():
+    """Return mean and covariance for Keane and Wolpin (1994) model."""
     # load model specifications
     base_params = pd.read_pickle(DATA_PATH / "params_kw_94_one_se.pkl")
 
@@ -73,9 +107,30 @@ def unconditional_samples(
     cov,
     n_samples,
     seed,
-    sampling_method="random",
+    sampling_method,
 ):
+    """Generate two independent groups of sample points.
+    Parameters
+    ----------
+    mean : pd.DataFrame or np.ndarray
+        The mean, of shape (k, ).
+    cov : pd.DataFrame or np.ndarrary
+        The covariance, has to be of shape (k, k).
+    n_samples : int
+        Number of samples to draw.
+    seed : int, optional
+        Random number generator seed.
+    sampling_method : string
+        Specifies which sampling method should be employed. Possible arguments
+        are in {"random", "grid", "chebyshev", "korobov","sobol", "halton",
+        "hammersley", "latin_hypercube"}
 
+    Returns
+    -------
+    sample_x, sample_x_prime : np.ndarray
+        Two arrays of shape (n_draws, n_params) with i.i.d draws from a
+        given joint distribution.
+    """
     distribution = cp.MvNormal(loc=mean, scale=cov)
 
     if sampling_method in CHAOSPY_SAMPLING_METHODS:
@@ -92,7 +147,18 @@ def unconditional_samples(
     return sample_x, sample_x_prime
 
 
-def substract_params(x):
+def subset_params(x):
+    """Pick a subset of samples from the sampled parameters.
+    Parameters
+    ----------
+    x : np.ndarray
+        Array of shape (n_draws, n_params).
+
+    Returns
+    -------
+    params_interests : np.ndarray
+        Array of shape (n_draws, 3) contains only 3 seleted parameters.
+    """
 
     n_draws = x.shape[0]
 
@@ -106,6 +172,23 @@ def substract_params(x):
 
 
 def conditional_samples(x_3, x_prime_3, MC_method, M):
+    """Generate mixed sample sets of interest distributed accroding to a conditional PDF.
+    Parameters
+    ----------
+    x_3 : np.ndarray
+        Array with shape (n_draws, 3).
+    x_prime : np.ndarray
+        Array with shape (n_draws, 3).
+    MC_method : string
+        Specify the Monte Carlo estimator. One of ["brute force", "DLR"],
+        where "DLR" denotes to the double loop reordering approach.
+    M : int
+        The number of conditional bins to genetate if `MC_method` is "DLR".
+    Returns
+    -------
+    x_mix :  np.ndarray
+        Mixed sample sets. Shape has the form (n_draws, 3, n_draws, 3).
+    """
 
     n_draws, n_params = x_3.shape
 
@@ -131,40 +214,64 @@ def conditional_samples(x_3, x_prime_3, MC_method, M):
     return x_3_mix
 
 
-def fix_true_params(x, true_values):
+def fix_true_params(x_3, true_values):
+    """Replace the 3 selected point estimates with the sampled parameters
+    Parameters
+    ----------
+    x_3 : np.ndarray
+        Array with shape (n_draws, 3).
+    true_values : np.ndarray
+        The point estimated, of shape (k, ).
+    Returns
+    -------
+    true_params_fix :  np.ndarray
+        Shape has the form (n_draws, n_params, n_draws, n_params).
+    """
 
-    n_draws = x.shape[0]
+    n_draws = x_3.shape[0]
 
     true_params_fix = np.tile(true_values, (n_draws, 1))
 
     for i in range(n_draws):
-        np.put(true_params_fix[i], [2, 14, 16], x[i])
+        np.put(true_params_fix[i], [2, 14, 16], x_3[i])
 
     return true_params_fix
 
 
-def fix_true_params_mix(x, true_values, MC_method):
+def fix_true_params_mix(x_3, true_values, MC_method):
+    """Replace the 3 selected point estimates with the conditional sampled parameters
+    Parameters
+    ----------
+    x_3 : np.ndarray
+        Array with shape (n_draws, 3).
+    true_values : np.ndarray
+        The point estimated, of shape (k, ).
+    Returns
+    -------
+    true_params_fix :  np.ndarray
+        Shape has the form (n_draws, n_params, n_draws, n_params).
+    """
 
     if MC_method == "Brute force":
 
-        n_draws, n_3_parmas = x.shape[:2]
+        n_draws, n_3_parmas = x_3.shape[:2]
 
         true_params_fix = np.tile(true_values, (n_draws, n_3_parmas, n_draws, 1))
 
         for i in range(n_draws):
             for j in range(n_3_parmas):
                 for k in range(n_draws):
-                    np.put(true_params_fix[i, j, k], [2, 14, 16], x[i, j, k])
+                    np.put(true_params_fix[i, j, k], [2, 14, 16], x_3[i, j, k])
 
     if MC_method == "DLR":
-        M, n_3_parmas, n_draws = x.shape[:3]
+        M, n_3_parmas, n_draws = x_3.shape[:3]
 
         true_params_fix = np.tile(true_values, (M, n_3_parmas, n_draws, 1))
 
         for i in range(M):
             for j in range(n_3_parmas):
                 for k in range(n_draws):
-                    np.put(true_params_fix[i, j, k], [2, 14, 16], x[i, j, k])
+                    np.put(true_params_fix[i, j, k], [2, 14, 16], x_3[i, j, k])
     return true_params_fix
 
 
@@ -172,7 +279,6 @@ def params_to_respy(input_params, *args):
     """transfer sampled paramters to respy format."""
 
     # baseline options and params for the indices.
-    _, base_options = rp.get_example_model("kw_94_one", with_data=False)
     base_params = pd.read_pickle(DATA_PATH / "params_kw_94_one_se.pkl")
 
     params_idx = pd.Series(data=input_params, index=base_params.index[0:27])

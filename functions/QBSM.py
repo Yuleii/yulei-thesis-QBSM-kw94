@@ -1,4 +1,4 @@
-"""Functions that create random samples for model inputs."""
+"""Functions that compute quantile-based sensitivity measures."""
 import numpy as np
 
 
@@ -11,7 +11,6 @@ def quantile_measures(quantile_y_x, quantile_y_x_mix):
     q_2 = np.zeros((len_alp, n_params))
     delt = np.zeros((m, n_params, len_alp, 1))
 
-    # Equation 24&25&27&28
     for j in range(m):
         for i in range(n_params):
             for pp in range(len_alp):
