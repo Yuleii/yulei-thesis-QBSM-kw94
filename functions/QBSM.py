@@ -1,3 +1,4 @@
+"""Functions that create random samples for model inputs."""
 import numpy as np
 
 

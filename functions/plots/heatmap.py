@@ -4,13 +4,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import os
+import sys
+
+sys.path.append("..")
+from sampling import DATA_PATH
 
 
 def heatmeap_corr():
 
-    corr_df = pd.read_pickle(
-        "/Users/yulei/Desktop/yulei-thesis-QGSM-kw94/data/est_corr_chol.pkl"
-    )
+    corr_df = pd.read_pickle(DATA_PATH / "est_corr_chol.pkl")
 
     select = corr_df.iloc[[0, 1, 7, 13, 16, 19, 20], [0, 1, 7, 13, 16, 19, 20]]
     mask = np.zeros_like(select)
@@ -102,3 +104,7 @@ def heatmeap_corr():
     plt.savefig(os.path.join(abs_dir, "../../figures/heatmap.png"), bbox_inches="tight")
 
     return fig, ax
+
+
+if __name__ == "__main__":
+    heatmeap_corr()

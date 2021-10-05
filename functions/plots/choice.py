@@ -69,3 +69,7 @@ def choiceovertime():
     )
 
     return fig, ax
+
+
+if __name__ == "__main__":
+    choiceovertime()

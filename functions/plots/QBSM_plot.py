@@ -11,12 +11,12 @@ from sampling import create_sample
 
 
 def QBSM_plot(
-    func=quantitiy_of_interest,
-    n_samples=30,
-    seed=123,
-    M=30,
-    sampling_method="random",
-    MC_method="Brute force",
+    func,
+    n_samples,
+    seed,
+    M,
+    sampling_method,
+    MC_method,
 ):
     # # range of alpha
     dalp = (0.98 - 0.02) / 30
@@ -31,7 +31,7 @@ def QBSM_plot(
     )
 
     quantile_y_x = unconditional_quantile_y(input_x_respy, alpha_grid, func)
-    quantile_y_x_mix = conditional_quantile_y(M, input_x_mix_respy, func, func)
+    quantile_y_x_mix = conditional_quantile_y(M, input_x_mix_respy, func, alpha_grid)
 
     q_1, q_2 = quantile_measures(quantile_y_x, quantile_y_x_mix)
     measure_1, measure_2 = normalized_quantile_measures(q_1, q_2)

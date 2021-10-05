@@ -76,3 +76,7 @@ def _bs_sampling(n_bs_samples, bs_sample_size, subsidy):
     )
 
     return diff_edu
+
+
+if __name__ == "__main__":
+    qoi_kde(n_bs_samples=40, bs_sample_size=100, subsidy=500)
